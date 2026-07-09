@@ -108,8 +108,8 @@
   const pin=document.getElementById("wkPin"), cur=document.getElementById("cur"), barFill=document.getElementById("barFill");
   let progress=0;                                   // smoothed
   const anim=(el,dur,delay)=>el.animate([{opacity:0,transform:"translateY(24px)"},{opacity:1,transform:"translateY(0)"}],{duration:dur,delay,easing:"cubic-bezier(.22,1,.36,1)",fill:"both"});
-  function playPanel(c){ anim(c.h3,700,0); anim(c.p,600,120); anim(c.cta,400,240); }
-  function hidePanel(c){ [c.h3,c.p,c.cta].forEach(el=>{ el.getAnimations().forEach(a=>a.cancel()); el.style.opacity="0"; el.style.transform="translateY(24px)"; }); }
+  function playPanel(c){ anim(c.h3,700,0); if(c.p) anim(c.p,600,120); anim(c.cta,400,c.p?240:140); }
+  function hidePanel(c){ [c.h3,c.p,c.cta].filter(Boolean).forEach(el=>{ el.getAnimations().forEach(a=>a.cancel()); el.style.opacity="0"; el.style.transform="translateY(24px)"; }); }
   cards.forEach(hidePanel);
 
   function targetProgress(){ const r=pin.getBoundingClientRect(); const total=pin.offsetHeight-window.innerHeight; return clamp(-r.top/total,0,1); }
