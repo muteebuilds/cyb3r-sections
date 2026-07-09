@@ -109,7 +109,7 @@
 .dm .pin-stage{ position:sticky; top:0; height:100vh; overflow:hidden; background:var(--bg); }
 .dm #gl{ position:absolute; inset:0; width:100%; height:100%; display:block; z-index:2; }
 .dm .headline{ position:absolute; inset:0; z-index:1; pointer-events:none; display:flex; flex-direction:column; justify-content:center; }
-.dm .headline .hw{ font-weight:500; letter-spacing:-.04em; line-height:.84; font-size:clamp(4rem,15vw,13rem); color:#26262d; text-transform:uppercase; white-space:nowrap; will-change:transform; }
+.dm .headline .hw{ font-weight:500; letter-spacing:-.04em; line-height:.84; font-size:clamp(4rem,15vw,13rem); color:#202A36; text-transform:uppercase; white-space:nowrap; will-change:transform; }
 .dm .headline .top{ align-self:flex-start; padding-left:var(--edge); transform:translateX(-100vw); }
 .dm .headline .bottom{ align-self:flex-end; padding-right:var(--edge); transform:translateX(100vw); }
 .dm .caption{ position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); z-index:3; text-align:center; font-family:var(--mono); font-size:12px; letter-spacing:.22em; text-transform:uppercase; color:var(--ink); pointer-events:none; line-height:1.7; }
