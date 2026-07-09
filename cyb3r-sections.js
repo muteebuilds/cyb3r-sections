@@ -147,7 +147,7 @@
     });
 
     // counter = nearest card to center
-    let best=0,bd=1e9; cards.forEach((c,t)=>{ const r=(headW+t*cardW+cardW/2-S)/W; const d=Math.abs(r-0.5); if(d<bd){bd=d;best=t;} });
+    let best=0,bd=1e9; cards.forEach((c,t)=>{ const r=(headW+t*cardW+cardW/2-S)/W; const d=Math.abs(r-0.75); if(d<bd){bd=d;best=t;} });
     cur.textContent=String(best+1).padStart(2,"0");
     barFill.style.transform=`scaleX(${progress})`;
     requestAnimationFrame(render);
@@ -276,7 +276,7 @@
     const n=innerHeight/(2*Math.tan(r*Math.PI/180/2)*camZ()); const uSizePx=new T.Vector2(cardW*n, cardH*n);
     GRID_IDX.forEach((pi)=>{
       const geo=new T.PlaneGeometry(cardW, cardH, 20, 12);
-      const mesh=new T.Mesh(geo, new T.ShaderMaterial({ uniforms:{ map:{value:makeTexture(pi,true)}, uSize:{value:uSizePx}, uRadius:{value:8} },
+      const mesh=new T.Mesh(geo, new T.ShaderMaterial({ uniforms:{ map:{value:makeTexture(pi,true)}, uSize:{value:uSizePx}, uRadius:{value:0} },
         vertexShader:"varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }",
         fragmentShader:gridFrag, side:T.DoubleSide, transparent:true }));
       mesh.visible=false; mesh.renderOrder=3; mesh.frustumCulled=false;

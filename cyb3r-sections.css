@@ -70,8 +70,8 @@
 .wk .hud .bar i{ position:absolute; left:0; top:0; height:100%; width:100%; background:var(--accent); transform-origin:left; transform:scaleX(0); }
 .wk .button_wrapper{ --step:30ms; --base-dur:300ms; --dur-step:30ms; --run:28px; --out-time:200ms; --in-time:320ms;
     --ul-out-time:1000ms; --ul-in-time:500ms; --arrow-gap:10px; --inset-min:8px; position:relative; display:inline-block; }
-.wk .button_wrapper .btn{ position:relative; display:block; text-decoration:none; color:var(--ink); font-family:var(--mono);
-    text-transform:uppercase; letter-spacing:.06em; font-size:.8rem; padding:8px 0 10px; width:15rem; overflow:hidden; cursor:pointer; }
+.wk .button_wrapper .btn{ position:relative; display:block; text-decoration:none; color:var(--ink); font-family:var(--sans);
+    font-weight:500; text-transform:none; letter-spacing:-.5px; font-size:1rem; padding:8px 0 10px; width:15rem; overflow:hidden; cursor:pointer; }
 .wk .button_wrapper .word{ display:inline-flex; transform:translate(0); position:relative; z-index:1; }
 .wk .button_wrapper .text{ display:inline-block; white-space:pre; transition-property:transform; transition-duration:var(--dur,var(--base-dur));
     transition-timing-function:ease; transition-delay:var(--delay,0s); transform:translate(0); }
