@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>CYB3R sections — preview</title>
+<link rel="stylesheet" href="cyb3r-sections.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<style>body{margin:0;background:#070707;color:#fff;font-family:Inter,system-ui,sans-serif}
+.demo-intro{min-height:40vh;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;text-align:center}
+.demo-intro b{color:#39F1E0}</style>
+</head>
+<body>
+<div class="demo-intro"><div>CYB3R SECTIONS — scroll ↓</div><div style="opacity:.5;font-size:12px">Section 1 (Selected Work) then Section 2 (Design in Motion)</div></div>
+
+<div class="wk">
+<div class="pin-container" id="wkPin">
+  <div class="pin-stage">
+    <div class="htrack" id="track"></div>
+    <div class="hud"><span class="cur" id="cur">01</span>&nbsp;/ 04<span class="bar"><i id="barFill"></i></span></div>
+  </div>
+</div>
+</div>
+
+<div class="dm">
+<div class="pin-container" id="dmPin">
+  <div class="pin-stage">
+    <div class="headline"><div class="hw top" id="hwTop">Work in</div><div class="hw bottom" id="hwBottom">Motion</div></div>
+    <canvas id="gl"></canvas>
+    <div class="caption" id="caption">Brand, web &amp; performance<br>built to move.</div>
+    <div class="foot-note">A living showcase of selected CYB3R projects across brand, web design and performance marketing.</div>
+    <a class="foot-cta" href="/work">View all work →</a>
+    <div class="hud"><span id="phase">RIBBON</span><span class="bar"><i id="bar"></i></span></div>
+  </div>
+</div>
+</div>
+
+<div class="demo-intro" style="min-height:30vh"><div style="opacity:.5;font-size:12px">end of preview</div></div>
+
+<script src="cyb3r-sections.js"></script>
+</body>
+</html>
