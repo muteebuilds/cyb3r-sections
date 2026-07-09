@@ -181,30 +181,37 @@
   const camZ   = ()=> innerWidth<768?28: isTab()?24:22;
   const gCols  = ()=> innerWidth<768?2:3;
 
-  // ---- palettes (no photos — solid colored cards, per request) ----
-  // ---- CYB3R projects: real Selected Works images, cycled across the 9 ribbon cards ----
-  const IMGS=[
-    ["https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a479f577aafab9f50b6cc0e_6a431114cd3657b8aaa793e5_featured_works_01.webp","EARLY HEALTH CITY","Strategy · Brand · Design"],
-    ["https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a479f577aafab9f50b6cc06_6a431140ec4ce9644fd61069_featured_works_02.webp","GATTACA GENOMICS","Web · Development"],
-    ["https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a293cee4280dd8c699d4f9b_Athlete%20in%20Motion%20(1).webp","INNOVATION CITY","SEO · Paid Media"],
-    ["https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a4d0dba884e0f0f15de3d43_cyb3r.png","CYB3R SOLUTIONS","Social · Content · AI"]
+  // ---- CYB3R service cards: 6 videos + titles (Cloudinary, pre-cropped to the card aspect 812:568, CORS ok) ----
+  const CARDS=[
+    ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637909/branding01_exa3fq.mp4","Brand & Identity"],
+    ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637913/website02_ry7jbe.mp4","Web Design & Development"],
+    ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637909/seo_wrwlfg.mp4","SEO & Google Ads"],
+    ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637914/social_kdyleo.mp4","Social Media & Content"],
+    ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637911/merch_sqjwqw.mp4","Commercial Print & Production"],
+    ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637914/ai_ads_hojtor.mp4","AI-Driven Advertising"]
   ];
-  const PAL=[IMGS[0],IMGS[1],IMGS[2],IMGS[3],IMGS[0],IMGS[1],IMGS[2],IMGS[3],IMGS[0]];  // 9 ribbon cards (4 projects, cycled)
-  const GRID_IDX=[0,1,2,3,4,5];            // 6 cards flatten into the grid (all 4 projects + 2 repeats)
+  const PAL=[0,1,2,3,4,5,0,1,2];           // 9 ribbon cards = indices into CARDS (6 unique, cycled)
+  const GRID_IDX=[0,1,2,3,4,5];            // 6 grid cards, one per service
 
-  function makeTexture(i, rounded){
-    const [url,lab,big]=PAL[i]; const cw=812,ch=568; const c=document.createElement("canvas"); c.width=cw; c.height=ch; const x=c.getContext("2d");
-    x.fillStyle="#141418"; x.fillRect(0,0,cw,ch);                            // dark placeholder while the image loads
-    const t=new T.CanvasTexture(c); t.minFilter=T.LinearFilter; t.magFilter=T.LinearFilter; t.generateMipmaps=false;
-    const img=new Image(); img.crossOrigin="anonymous";
-    img.onload=function(){
-      const iw=img.naturalWidth,ih=img.naturalHeight,sc=Math.max(cw/iw,ch/ih),w=iw*sc,h=ih*sc;
-      x.drawImage(img,(cw-w)/2,(ch-h)/2,w,h);                                // cover-fit; landscape canvas matches the card aspect (1/ASPECT) so nothing stretches
-      const gr=x.createLinearGradient(0,ch*0.45,0,ch); gr.addColorStop(0,"rgba(0,0,0,0)"); gr.addColorStop(1,"rgba(0,0,0,.66)"); x.fillStyle=gr; x.fillRect(0,ch*0.45,cw,ch*0.55);
-      x.fillStyle="#fff"; x.font="600 48px Inter,Helvetica,Arial,sans-serif"; wrap(x,big,44,ch-40,cw-88,54);
-      t.needsUpdate=true;
-    };
-    img.src=url; return t;
+  const _cardCache={};
+  function getCard(idx){
+    if(_cardCache[idx]) return _cardCache[idx];
+    const [url,title]=CARDS[idx];
+    // playing video -> VideoTexture (auto-updates each frame). Cloudinary crops to the card aspect so nothing stretches.
+    const vid=document.createElement("video");
+    vid.crossOrigin="anonymous"; vid.muted=true; vid.defaultMuted=true; vid.loop=true; vid.playsInline=true;
+    vid.setAttribute("muted",""); vid.setAttribute("playsinline",""); vid.setAttribute("webkit-playsinline",""); vid.preload="auto";
+    vid.style.cssText="position:fixed;left:-9999px;top:0;width:2px;height:2px;opacity:0;pointer-events:none";
+    (document.body||document.documentElement).appendChild(vid);
+    vid.src=url; const pr=vid.play(); if(pr&&pr.catch) pr.catch(function(){});
+    const vtex=new T.VideoTexture(vid); vtex.minFilter=T.LinearFilter; vtex.magFilter=T.LinearFilter; vtex.generateMipmaps=false;
+    // static label overlay (transparent, bottom gradient + title) composited over the video in the shader
+    const cw=812,ch=568; const c=document.createElement("canvas"); c.width=cw; c.height=ch; const x=c.getContext("2d");
+    x.clearRect(0,0,cw,ch);
+    const gr=x.createLinearGradient(0,ch*0.40,0,ch); gr.addColorStop(0,"rgba(0,0,0,0)"); gr.addColorStop(1,"rgba(0,0,0,.72)"); x.fillStyle=gr; x.fillRect(0,ch*0.40,cw,ch*0.60);
+    x.fillStyle="#fff"; x.font="600 48px Inter,Helvetica,Arial,sans-serif"; wrap(x,title,44,ch-40,cw-88,54);
+    const ltex=new T.CanvasTexture(c); ltex.minFilter=T.LinearFilter; ltex.magFilter=T.LinearFilter; ltex.generateMipmaps=false;
+    return (_cardCache[idx]={vtex,ltex,vid});
   }
   function wrap(ctx,text,x,y,maxW,lh){ const words=text.split(" "); let line="",yy=y-lh; const lines=[];
     for(const w of words){ const test=line?line+" "+w:w; if(ctx.measureText(test).width>maxW && line){ lines.push(line); line=w; } else line=test; } lines.push(line);
@@ -229,13 +236,13 @@
   function tangent(e){ const t=(e-V)/2, r=((-2*t)/2)*2.5*Math.exp(-t*t); return new T.Vector3(-12*Math.sin(e), b-r, 12*Math.cos(e)).normalize(); }
 
   // ---- ribbon cards (PlaneGeometry(1,1,116,1) rewritten each frame) ----
-  const ribMat = tex => new T.ShaderMaterial({ uniforms:{ map:{value:tex} },
+  const ribMat = card => new T.ShaderMaterial({ uniforms:{ map:{value:card.vtex}, label:{value:card.ltex} },
     vertexShader:"varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }",
-    fragmentShader:"uniform sampler2D map; varying vec2 vUv; void main(){ vec2 uv=vUv; if(gl_FrontFacing) uv.x=1.0-uv.x; gl_FragColor=texture2D(map,uv); }",
+    fragmentShader:"uniform sampler2D map; uniform sampler2D label; varying vec2 vUv; void main(){ vec2 uv=vUv; if(gl_FrontFacing) uv.x=1.0-uv.x; vec4 v=texture2D(map,uv); vec4 l=texture2D(label,uv); gl_FragColor=vec4(mix(v.rgb,l.rgb,l.a),1.0); }",
     side:T.DoubleSide });
   const ribbon=[];
   for(let i=0;i<RIB_N;i++){ const geo=new T.PlaneGeometry(1,1,116,1);
-    const mesh=new T.Mesh(geo, ribMat(makeTexture(i,false)));
+    const mesh=new T.Mesh(geo, ribMat(getCard(PAL[i])));
     mesh.visible=false; mesh.renderOrder=1; mesh.frustumCulled=false;
     mesh.geometry.boundingSphere=new T.Sphere(new T.Vector3(0,0,0),1e3);
     mesh.userData={hoverScale:1, uvWritten:false}; scene.add(mesh); ribbon.push(mesh); }
@@ -257,10 +264,10 @@
   }
 
   // ---- grid cards (rounded-corner SDF shader) + wave ----
-  const gridFrag=`uniform sampler2D map; uniform vec2 uSize; uniform float uRadius; varying vec2 vUv;
+  const gridFrag=`uniform sampler2D map; uniform sampler2D label; uniform vec2 uSize; uniform float uRadius; varying vec2 vUv;
     void main(){ vec2 pxPos=(vUv-0.5)*uSize; vec2 halfSize=uSize*0.5; vec2 q=abs(pxPos)-halfSize+uRadius;
       float dist=min(max(q.x,q.y),0.0)+length(max(q,0.0))-uRadius; float alpha=1.0-smoothstep(-0.5,0.5,dist);
-      if(alpha<=0.0) discard; vec4 col=texture2D(map,vUv); gl_FragColor=vec4(col.rgb, col.a*alpha); }`;
+      if(alpha<=0.0) discard; vec4 v=texture2D(map,vUv); vec4 l=texture2D(label,vUv); gl_FragColor=vec4(mix(v.rgb,l.rgb,l.a), alpha); }`;
   let grid=[], cardW=1, cardH=1, gapX=0.5, gapY=0.7, GCOLS=3, GROWS=2;
   function gridWidth(){ const e=Math.tan(fovDeg()*Math.PI/180/2)*camZ(), t=e*(innerWidth/innerHeight), r=gCols(),
       n=innerWidth<768?3:2, o=innerWidth>=1440, s=innerWidth<768?0.18:isTab()?0.28:o?0.5:0.38, cc=innerWidth<768?0.22:isTab()?0.36:o?0.7:0.55;
@@ -275,7 +282,8 @@
     const n=innerHeight/(2*Math.tan(r*Math.PI/180/2)*camZ()); const uSizePx=new T.Vector2(cardW*n, cardH*n);
     GRID_IDX.forEach((pi)=>{
       const geo=new T.PlaneGeometry(cardW, cardH, 20, 12);
-      const mesh=new T.Mesh(geo, new T.ShaderMaterial({ uniforms:{ map:{value:makeTexture(pi,true)}, uSize:{value:uSizePx}, uRadius:{value:0} },
+      const card=getCard(pi);
+      const mesh=new T.Mesh(geo, new T.ShaderMaterial({ uniforms:{ map:{value:card.vtex}, label:{value:card.ltex}, uSize:{value:uSizePx}, uRadius:{value:0} },
         vertexShader:"varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }",
         fragmentShader:gridFrag, side:T.DoubleSide, transparent:true }));
       mesh.visible=false; mesh.renderOrder=3; mesh.frustumCulled=false;
