@@ -19,16 +19,20 @@
   const projects=[
     { name:"Early Health City", desc:"Strategy, brand and design for a landmark health destination.",
       kick:"Strategy · Branding · Design", hero:"Health, reimagined.",
-      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a479f577aafab9f50b6cc0e_6a431114cd3657b8aaa793e5_featured_works_01.webp" },
+      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a479f577aafab9f50b6cc0e_6a431114cd3657b8aaa793e5_featured_works_01.webp",
+      video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1783004741/EarlyHealthCity-Quick_agpsxp.mp4" },
     { name:"Gattaca Genomics", desc:"Web design and development for a next-generation genomics platform.",
       kick:"Web Design · Development", hero:"Decoding tomorrow.",
-      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a479f577aafab9f50b6cc06_6a431140ec4ce9644fd61069_featured_works_02.webp" },
+      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a479f577aafab9f50b6cc06_6a431140ec4ce9644fd61069_featured_works_02.webp",
+      video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1783434285/gattacavideo_rkjmpa.mp4" },
     { name:"Innovation City (RAKDAO)", desc:"SEO, Google Ads and paid media built to scale on-chain growth.",
       kick:"SEO · Google Ads · Paid Media", hero:"Built on-chain.",
-      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a293cee4280dd8c699d4f9b_Athlete%20in%20Motion%20(1).webp" },
+      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a293cee4280dd8c699d4f9b_Athlete%20in%20Motion%20(1).webp",
+      video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1782952121/rakdaonew_fkhboc.mp4" },
     { name:"CYB3R Solutions", desc:"Social, content and AI-driven advertising engineered for growth.",
       kick:"Social · Content · AI Advertising", hero:"Growth, engineered.",
-      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a4d0dba884e0f0f15de3d43_cyb3r.png" }
+      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a4d0dba884e0f0f15de3d43_cyb3r.png",
+      video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1782950479/cyb3r_awam01.mp4" }
   ];
   const N=projects.length;
   const track=document.getElementById("track");
@@ -86,12 +90,19 @@
   const cards=projects.map((p)=>{
     const el=document.createElement("div"); el.className="panel card";
     const inner=document.createElement("div"); inner.className="p-inner";
-    inner.innerHTML=`<div class="art"><div class="scene" style="background-image:url('${p.img}')"></div></div>
+    inner.innerHTML=`<div class="art"><div class="scene" style="background-image:url('${p.img}')"></div>${p.video?`<video class="scene-vid" muted loop playsinline preload="metadata" poster="${p.img}"><source src="${p.video}" type="video/mp4"></video>`:``}</div>
       <div class="info"><div class="cardline"></div><h3>${p.name}</h3><div class="cta-row"></div></div>`;
     el.appendChild(inner); track.appendChild(el);
     inner.querySelector(".cta-row").appendChild(makeButton("Explore project"));
     return { el, inner, cardline:inner.querySelector(".cardline"), h3:inner.querySelector("h3"), p:inner.querySelector("p"), cta:inner.querySelector(".cta-row"), played:false, drew:false };
   });
+
+  /* ---------- card videos: play only while in view (perf + reduced-motion aware) ---------- */
+  if(!reduce && "IntersectionObserver" in window){
+    const vio=new IntersectionObserver((ents)=>{ ents.forEach(en=>{ const v=en.target;
+      if(en.isIntersecting){ v.muted=true; const pr=v.play(); if(pr&&pr.catch) pr.catch(()=>{}); } else v.pause(); }); },{threshold:0.15});
+    cards.forEach(c=>{ const v=c.inner.querySelector(".scene-vid"); if(v){ v.muted=true; vio.observe(v); } });
+  }
 
   /* ---------- layout (exact: heading = 0.5W, cards = 0.5W each → A=0.5w, R=0.5w) ---------- */
   let W=0, headW=0, cardW=0, trackW=0, entryDist=0, stageH=0;
