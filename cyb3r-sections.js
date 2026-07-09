@@ -83,9 +83,9 @@
 
   /* ---------- build track: heading panel + card panels ---------- */
   const headPanel=document.createElement("div"); headPanel.className="panel head";
-  headPanel.innerHTML=`<h2>Selected Works</h2><div class="cta-row" id="viewAllHost"></div>`;
+  headPanel.innerHTML=`<h2>Selected Works</h2><p class="lede">A living showcase of selected CYB3R projects across brand, web design and performance marketing.</p><div class="cta-row" id="viewAllHost"></div>`;
   track.appendChild(headPanel);
-  headPanel.querySelector("#viewAllHost").appendChild(makeButton("View all projects"));
+  headPanel.querySelector("#viewAllHost").appendChild(makeButton("View all work"));
 
   const cards=projects.map((p)=>{
     const el=document.createElement("div"); el.className="panel card";
