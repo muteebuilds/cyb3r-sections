@@ -79,7 +79,7 @@
 
   /* ---------- build track: heading panel + card panels ---------- */
   const headPanel=document.createElement("div"); headPanel.className="panel head";
-  headPanel.innerHTML=`<div class="kicker"><b>✦</b> SELECTED WORK</div><h2>Selected work<br>&amp; explorations</h2><div class="cta-row" id="viewAllHost"></div>`;
+  headPanel.innerHTML=`<h2>Selected work<br>&amp; explorations</h2><div class="cta-row" id="viewAllHost"></div>`;
   track.appendChild(headPanel);
   headPanel.querySelector("#viewAllHost").appendChild(makeButton("View all projects"));
 
@@ -87,8 +87,7 @@
     const el=document.createElement("div"); el.className="panel card";
     const inner=document.createElement("div"); inner.className="p-inner";
     inner.innerHTML=`<div class="art"><div class="scene" style="background-image:url('${p.img}')"></div>
-      <div class="brandmark"><i></i><i></i></div><div class="kick">${p.kick}</div><div class="hero-word">${p.hero}</div>
-      <div class="frame"><span class="tl"></span><span class="tr"></span><span class="bl"></span><span class="br"></span></div></div>
+      <div class="brandmark"><i></i><i></i></div><div class="kick">${p.kick}</div><div class="hero-word">${p.hero}</div></div>
       <div class="info"><div class="cardline"></div><h3>${p.name}</h3><p>${p.desc}</p><div class="cta-row"></div></div>`;
     el.appendChild(inner); track.appendChild(el);
     inner.querySelector(".cta-row").appendChild(makeButton("Explore project"));
@@ -194,9 +193,6 @@
       const gr=x.createLinearGradient(0,ch*0.42,0,ch); gr.addColorStop(0,"rgba(0,0,0,0)"); gr.addColorStop(1,"rgba(0,0,0,.66)"); x.fillStyle=gr; x.fillRect(0,ch*0.42,cw,ch*0.58);
       x.fillStyle="rgba(255,255,255,.94)"; x.font="500 24px ui-monospace,Menlo,monospace"; x.fillText(lab.toUpperCase(),40,58);
       x.font="600 54px Inter,Helvetica,Arial,sans-serif"; wrap(x,big,40,812-56,500,54);
-      x.strokeStyle="rgba(57,241,224,.85)"; x.lineWidth=3;                   // teal corner ticks
-      const m=44,s2=26; [[m,m,1,1],[568-m,m,-1,1],[m,812-m,1,-1],[568-m,812-m,-1,-1]].forEach(([px,py,sx,sy])=>{
-        x.beginPath(); x.moveTo(px+sx*s2,py); x.lineTo(px,py); x.lineTo(px,py+sy*s2); x.stroke(); });
       t.needsUpdate=true;
     };
     img.src=url; return t;
