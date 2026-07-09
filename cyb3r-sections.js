@@ -79,16 +79,15 @@
 
   /* ---------- build track: heading panel + card panels ---------- */
   const headPanel=document.createElement("div"); headPanel.className="panel head";
-  headPanel.innerHTML=`<h2>Selected work<br>&amp; explorations</h2><div class="cta-row" id="viewAllHost"></div>`;
+  headPanel.innerHTML=`<h2>Selected Works</h2><div class="cta-row" id="viewAllHost"></div>`;
   track.appendChild(headPanel);
   headPanel.querySelector("#viewAllHost").appendChild(makeButton("View all projects"));
 
   const cards=projects.map((p)=>{
     const el=document.createElement("div"); el.className="panel card";
     const inner=document.createElement("div"); inner.className="p-inner";
-    inner.innerHTML=`<div class="art"><div class="scene" style="background-image:url('${p.img}')"></div>
-      <div class="brandmark"><i></i><i></i></div><div class="kick">${p.kick}</div><div class="hero-word">${p.hero}</div></div>
-      <div class="info"><div class="cardline"></div><h3>${p.name}</h3><p>${p.desc}</p><div class="cta-row"></div></div>`;
+    inner.innerHTML=`<div class="art"><div class="scene" style="background-image:url('${p.img}')"></div></div>
+      <div class="info"><div class="cardline"></div><h3>${p.name}</h3><div class="cta-row"></div></div>`;
     el.appendChild(inner); track.appendChild(el);
     inner.querySelector(".cta-row").appendChild(makeButton("Explore project"));
     return { el, inner, cardline:inner.querySelector(".cardline"), h3:inner.querySelector("h3"), p:inner.querySelector("p"), cta:inner.querySelector(".cta-row"), played:false, drew:false };
