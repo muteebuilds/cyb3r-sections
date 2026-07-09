@@ -193,16 +193,15 @@
   const GRID_IDX=[0,1,2,3,4,5];            // 6 cards flatten into the grid (all 4 projects + 2 repeats)
 
   function makeTexture(i, rounded){
-    const [url,lab,big]=PAL[i]; const c=document.createElement("canvas"); c.width=568; c.height=812; const x=c.getContext("2d");
-    x.fillStyle="#141418"; x.fillRect(0,0,568,812);                          // dark placeholder while the image loads
+    const [url,lab,big]=PAL[i]; const cw=812,ch=568; const c=document.createElement("canvas"); c.width=cw; c.height=ch; const x=c.getContext("2d");
+    x.fillStyle="#141418"; x.fillRect(0,0,cw,ch);                            // dark placeholder while the image loads
     const t=new T.CanvasTexture(c); t.minFilter=T.LinearFilter; t.magFilter=T.LinearFilter; t.generateMipmaps=false;
     const img=new Image(); img.crossOrigin="anonymous";
     img.onload=function(){
-      const cw=568,ch=812,iw=img.naturalWidth,ih=img.naturalHeight,sc=Math.max(cw/iw,ch/ih),w=iw*sc,h=ih*sc;
-      x.drawImage(img,(cw-w)/2,(ch-h)/2,w,h);                                // cover-fit (no distortion)
-      const gr=x.createLinearGradient(0,ch*0.42,0,ch); gr.addColorStop(0,"rgba(0,0,0,0)"); gr.addColorStop(1,"rgba(0,0,0,.66)"); x.fillStyle=gr; x.fillRect(0,ch*0.42,cw,ch*0.58);
-      x.fillStyle="rgba(255,255,255,.94)"; x.font="500 24px ui-monospace,Menlo,monospace"; x.fillText(lab.toUpperCase(),40,58);
-      x.font="600 54px Inter,Helvetica,Arial,sans-serif"; wrap(x,big,40,812-56,500,54);
+      const iw=img.naturalWidth,ih=img.naturalHeight,sc=Math.max(cw/iw,ch/ih),w=iw*sc,h=ih*sc;
+      x.drawImage(img,(cw-w)/2,(ch-h)/2,w,h);                                // cover-fit; landscape canvas matches the card aspect (1/ASPECT) so nothing stretches
+      const gr=x.createLinearGradient(0,ch*0.45,0,ch); gr.addColorStop(0,"rgba(0,0,0,0)"); gr.addColorStop(1,"rgba(0,0,0,.66)"); x.fillStyle=gr; x.fillRect(0,ch*0.45,cw,ch*0.55);
+      x.fillStyle="#fff"; x.font="600 48px Inter,Helvetica,Arial,sans-serif"; wrap(x,big,44,ch-40,cw-88,54);
       t.needsUpdate=true;
     };
     img.src=url; return t;
