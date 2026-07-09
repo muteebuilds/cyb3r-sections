@@ -115,7 +115,7 @@
 .dm .headline .bottom{ align-self:flex-end; padding-right:var(--edge); transform:translateX(100vw); }
 .dm .caption{ position:absolute; left:0; right:0; top:50%; transform:translateY(-50%); z-index:3; text-align:center; font-family:var(--sans); font-weight:500; font-size:clamp(1.4rem,3vw,2.4rem); letter-spacing:-.02em; text-transform:none; color:var(--ink); pointer-events:none; line-height:1.15; padding:0 6vw; }
 .dm .foot-note{ display:none; position:absolute; left:var(--edge); bottom:34px; z-index:3; max-width:32ch; color:var(--ink-2); font-size:.9rem; }
-.dm .foot-cta{ position:absolute; right:var(--edge); bottom:34px; z-index:3; font-family:var(--mono); font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:var(--ink); border-bottom:1px solid var(--accent); padding-bottom:3px; text-decoration:none; }
+.dm .foot-cta{ position:absolute; right:var(--edge); bottom:34px; z-index:3; font-family:var(--sans); font-weight:500; font-size:1rem; letter-spacing:-.5px; text-transform:none; color:var(--ink); border-bottom:1px solid var(--accent); padding-bottom:3px; text-decoration:none; }
 .dm .hud{ position:absolute; left:50%; bottom:18px; transform:translateX(-50%); z-index:3; font-family:var(--mono); font-size:10px; letter-spacing:.2em; color:var(--ink-dim); display:flex; gap:10px; align-items:center; }
 .dm .hud #phase{ display:none; }
 .dm .hud .bar{ width:120px; height:1px; background:var(--line); position:relative; }
