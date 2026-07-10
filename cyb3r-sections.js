@@ -189,7 +189,7 @@
   const CARDS=[
     ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637909/branding01_exa3fq.mp4","Brand & Identity"],
     ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637913/website02_ry7jbe.mp4","Web Design & Development"],
-    ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637909/seo_wrwlfg.mp4","SEO & Google Ads"],
+    ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783693099/seoranking_ssu7ak.mp4","SEO & Google Ads"],
     ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637914/social_kdyleo.mp4","Social Media & Content"],
     ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637911/merch_sqjwqw.mp4","Commercial Print & Production"],
     ["https://res.cloudinary.com/dq0likrb8/video/upload/c_fill,ar_812:568,q_auto,w_800/v1783637914/ai_ads_hojtor.mp4","AI-Driven Advertising"]
