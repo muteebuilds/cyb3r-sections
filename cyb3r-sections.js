@@ -193,6 +193,15 @@
   ];
   const PAL=[0,1,2,3,4,5,0,1,2];           // 9 ribbon cards = indices into CARDS (6 unique, cycled)
   const GRID_IDX=[0,1,2,3,4,5];            // 6 grid cards, one per service
+  // one-line service blurbs, shown in a tooltip when you hover a settled grid card (index matches CARDS)
+  const DESC=[
+    "Logo systems, brand guidelines and visual identities that give your business a distinct, consistent presence.",
+    "Fast, responsive websites and web apps engineered to convert - from UX and design through build and launch.",
+    "Search strategies and Google Ads that put you in front of high-intent customers and grow qualified traffic.",
+    "Scroll-stopping content and always-on social management that build audience, community and demand.",
+    "Print, packaging and large-format production - crafted, colour-accurate and delivered to spec.",
+    "AI-powered creative and media buying that optimise spend and scale performance in real time."
+  ];
 
   const _cardCache={};
   function getCard(idx){
@@ -310,6 +319,35 @@
   }
   buildGrid(); addEventListener("resize", size);
 
+  // ---- hover tooltips on the settled grid cards (raycast -> DOM tip) ----
+  let curH=0;
+  (function(){
+    const ray=new T.Raycaster();
+    const tip=document.createElement("div"); tip.className="dm-tip";
+    tip.style.cssText="position:fixed;z-index:60;max-width:290px;padding:14px 16px;background:rgba(10,14,20,.93);border:1px solid rgba(57,241,224,.4);color:#eaf6f5;font:400 14px/1.55 Inter,Helvetica,Arial,sans-serif;pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .25s ease,transform .25s ease;box-shadow:0 12px 40px rgba(0,0,0,.5)";
+    const tipT=document.createElement("div"); tipT.style.cssText="font-weight:600;letter-spacing:.03em;color:#39F1E0;margin-bottom:6px;font-size:12px;text-transform:uppercase";
+    const tipB=document.createElement("div"); tip.appendChild(tipT); tip.appendChild(tipB);
+    (document.body||document.documentElement).appendChild(tip);
+    let hoverI=-1;
+    function hide(){ if(hoverI!==-1){ hoverI=-1; tip.style.opacity="0"; tip.style.transform="translateY(6px)"; canvas.style.cursor=""; } }
+    function move(ev){
+      if(curH<0.72){ hide(); return; }
+      const rect=canvas.getBoundingClientRect();
+      const nx=((ev.clientX-rect.left)/rect.width)*2-1, ny=-((ev.clientY-rect.top)/rect.height)*2+1;
+      ray.setFromCamera({x:nx,y:ny}, camera);
+      const hits=ray.intersectObjects(grid.filter(g=>g.visible), false);
+      if(hits.length){
+        const e=grid.indexOf(hits[0].object);
+        if(e!==hoverI){ hoverI=e; const ci=GRID_IDX[e]; tipT.textContent=CARDS[ci][1]; tipB.textContent=DESC[ci]; }
+        tip.style.left=Math.min(ev.clientX+18, innerWidth-306)+"px";
+        tip.style.top=Math.min(ev.clientY+18, innerHeight-150)+"px";
+        tip.style.opacity="1"; tip.style.transform="translateY(0)"; canvas.style.cursor="pointer";
+      } else hide();
+    }
+    canvas.addEventListener("mousemove", move);
+    canvas.addEventListener("mouseleave", hide);
+  })();
+
   // ---- scroll drive (Lenis-style continuous smoothing) ----
   const pin=document.getElementById("dmPin"), hwTop=document.getElementById("hwTop"), hwBottom=document.getElementById("hwBottom"),
         caption=document.getElementById("caption"), bar=document.getElementById("bar"), phaseEl=document.getElementById("phase");
@@ -322,6 +360,7 @@
     const g=gSmooth;
     const P=Math.min(1, g/RIB_P_END);
     const H=clamp((g-EG)/(1-EG),0,1);
+    curH=H;
 
     // ribbon
     const lead=P*(HLEN+EP)-EP+25;
