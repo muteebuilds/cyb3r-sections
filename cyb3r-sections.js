@@ -319,30 +319,36 @@
   }
   buildGrid(); addEventListener("resize", size);
 
-  // ---- hover tooltips on the settled grid cards (raycast -> DOM tip) ----
+  // ---- hover tooltips on the settled grid cards (raycast -> DOM tip; subtle cross-fade on card change) ----
   let curH=0;
   (function(){
     const ray=new T.Raycaster();
     const tip=document.createElement("div"); tip.className="dm-tip";
-    tip.style.cssText="position:fixed;z-index:60;max-width:290px;padding:14px 16px;background:rgba(10,14,20,.93);border:1px solid rgba(57,241,224,.4);color:#eaf6f5;font:400 14px/1.55 Inter,Helvetica,Arial,sans-serif;pointer-events:none;opacity:0;transform:translateY(6px);transition:opacity .25s ease,transform .25s ease;box-shadow:0 12px 40px rgba(0,0,0,.5)";
+    tip.style.cssText="position:fixed;z-index:60;max-width:290px;padding:14px 16px;background:rgba(10,14,20,.93);border:1px solid rgba(57,241,224,.4);color:#eaf6f5;font:400 14px/1.55 Inter,Helvetica,Arial,sans-serif;pointer-events:none;opacity:0;transform:translateY(8px);transition:opacity .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.22,1,.36,1);box-shadow:0 12px 40px rgba(0,0,0,.5)";
     const tipT=document.createElement("div"); tipT.style.cssText="font-weight:600;letter-spacing:.03em;color:#39F1E0;margin-bottom:6px;font-size:12px;text-transform:uppercase";
     const tipB=document.createElement("div"); tip.appendChild(tipT); tip.appendChild(tipB);
     (document.body||document.documentElement).appendChild(tip);
-    let hoverI=-1;
-    function hide(){ if(hoverI!==-1){ hoverI=-1; tip.style.opacity="0"; tip.style.transform="translateY(6px)"; canvas.style.cursor=""; } }
+    let hoverI=-1, shownI=-1, swap=null;
+    function render(e){ const ci=GRID_IDX[e]; tipT.textContent=CARDS[ci][1]; tipB.textContent=DESC[ci]; shownI=e; }
+    function hide(){ if(hoverI===-1) return; hoverI=-1; if(swap){ clearTimeout(swap); swap=null; } tip.style.opacity="0"; tip.style.transform="translateY(8px)"; canvas.style.cursor=""; }
     function move(ev){
       if(curH<0.72){ hide(); return; }
       const rect=canvas.getBoundingClientRect();
       const nx=((ev.clientX-rect.left)/rect.width)*2-1, ny=-((ev.clientY-rect.top)/rect.height)*2+1;
       ray.setFromCamera({x:nx,y:ny}, camera);
       const hits=ray.intersectObjects(grid.filter(g=>g.visible), false);
-      if(hits.length){
-        const e=grid.indexOf(hits[0].object);
-        if(e!==hoverI){ hoverI=e; const ci=GRID_IDX[e]; tipT.textContent=CARDS[ci][1]; tipB.textContent=DESC[ci]; }
-        tip.style.left=Math.min(ev.clientX+18, innerWidth-306)+"px";
-        tip.style.top=Math.min(ev.clientY+18, innerHeight-150)+"px";
-        tip.style.opacity="1"; tip.style.transform="translateY(0)"; canvas.style.cursor="pointer";
-      } else hide();
+      if(!hits.length){ hide(); return; }
+      const e=grid.indexOf(hits[0].object);
+      canvas.style.cursor="pointer";
+      tip.style.left=Math.min(ev.clientX+18, innerWidth-306)+"px";
+      tip.style.top=Math.min(ev.clientY+18, innerHeight-150)+"px";
+      if(e===hoverI) return;                                   // same card -> just trail the cursor
+      hoverI=e;
+      if(shownI===-1){ render(e); tip.style.opacity="1"; tip.style.transform="translateY(0)"; return; }   // first appearance: rise + fade in
+      // moved to a different card -> subtle cross-fade (the box stays put, the content dips out then back in)
+      if(swap) clearTimeout(swap);
+      tip.style.opacity="0";
+      swap=setTimeout(function(){ if(hoverI===e){ render(e); tip.style.opacity="1"; } }, 190);
     }
     canvas.addEventListener("mousemove", move);
     canvas.addEventListener("mouseleave", hide);
