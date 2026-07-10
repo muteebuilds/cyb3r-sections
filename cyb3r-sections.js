@@ -16,38 +16,41 @@
   const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
   const lerp=(a,b,t)=>a+(b-a)*t;
 
+  // `work` = the exact project NAME on the Work page (used to open that project's overlay in a new tab)
   const projects=[
     { name:"Early Health City", desc:"Strategy, brand and design for a landmark health destination.",
-      kick:"Strategy · Branding · Design", hero:"Health, reimagined.",
+      kick:"Strategy · Branding · Design", hero:"Health, reimagined.", work:"Early Health City",
       img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a479f577aafab9f50b6cc0e_6a431114cd3657b8aaa793e5_featured_works_01.webp",
       video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1783004741/EarlyHealthCity-Quick_agpsxp.mp4" },
     { name:"Gattaca Genomics", desc:"Web design and development for a next-generation genomics platform.",
-      kick:"Web Design · Development", hero:"Decoding tomorrow.",
+      kick:"Web Design · Development", hero:"Decoding tomorrow.", work:"Gattaca Genomics",
       img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a479f577aafab9f50b6cc06_6a431140ec4ce9644fd61069_featured_works_02.webp",
       video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1783434285/gattacavideo_rkjmpa.mp4" },
-    { name:"Innovation City (RAKDAO)", desc:"SEO, Google Ads and paid media built to scale on-chain growth.",
-      kick:"SEO · Google Ads · Paid Media", hero:"Built on-chain.",
-      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a293cee4280dd8c699d4f9b_Athlete%20in%20Motion%20(1).webp",
-      video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1782952121/rakdaonew_fkhboc.mp4" },
-    { name:"CYB3R Solutions", desc:"Social, content and AI-driven advertising engineered for growth.",
-      kick:"Social · Content · AI Advertising", hero:"Growth, engineered.",
+    { name:"Cyb3r Group", desc:"Social, content and AI-driven advertising engineered for growth.",
+      kick:"Social · Content · AI Advertising", hero:"Growth, engineered.", work:"CYB3R",
       img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a4d0dba884e0f0f15de3d43_cyb3r.png",
-      video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1782950479/cyb3r_awam01.mp4" }
+      video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1782950479/cyb3r_awam01.mp4" },
+    { name:"Innovation City (RAKDAO)", desc:"SEO, Google Ads and paid media built to scale on-chain growth.",
+      kick:"SEO · Google Ads · Paid Media", hero:"Built on-chain.", work:"Innovation City",
+      img:"https://cdn.prod.website-files.com/6a293cee4280dd8c699d4d69/6a293cee4280dd8c699d4f9b_Athlete%20in%20Motion%20(1).webp",
+      video:"https://res.cloudinary.com/dq0likrb8/video/upload/q_auto,w_1280,c_limit/v1782952121/rakdaonew_fkhboc.mp4" }
   ];
   const N=projects.length;
   const track=document.getElementById("track");
   if(!track) return;   // guard: section absent (e.g. a page with only .dm) -> don't crash the file
 
   /* ---------- exact button_wrapper ---------- */
-  function makeButton(label){
+  function makeButton(label, opts){
+    opts=opts||{};
     const wrap=document.createElement("span"); wrap.className="button_wrapper";
-    const btn=document.createElement("a"); btn.className="btn"; btn.href="#";
+    const btn=document.createElement("a"); btn.className="btn"; btn.href=opts.href||"#";
+    if(opts.target){ btn.target=opts.target; btn.rel="noopener"; }
     const uR=document.createElement("span"); uR.className="u-right"; const uL=document.createElement("span"); uL.className="u-left";
     const word=document.createElement("span"); word.className="word";
     [...label].forEach(ch=>{ const s=document.createElement("span"); s.className="text"; s.textContent=ch; word.appendChild(s); });
     const aR=document.createElement("span"); aR.className="arrow arrow-right"; aR.innerHTML='<span class="arrow-sprite">→</span>';
     const aL=document.createElement("span"); aL.className="arrow arrow-left"; aL.innerHTML='<span class="arrow-sprite">→</span>';
-    btn.append(uR,uL,word,aR,aL); wrap.append(btn); btn.addEventListener("click",e=>e.preventDefault());
+    btn.append(uR,uL,word,aR,aL); wrap.append(btn); if(!opts.href) btn.addEventListener("click",e=>e.preventDefault());
     const num=(el,k,d)=>{ const v=parseFloat(getComputedStyle(el).getPropertyValue(k)); return Number.isFinite(v)?v:d; };
     const kill=el=>el&&el.getAnimations().forEach(a=>{ try{a.commitStyles();}catch(e){} a.cancel(); });
     const slide=(el,tx,op,dur,delay=0)=>{ if(!el)return; el.getAnimations().forEach(a=>a.cancel());
@@ -84,9 +87,9 @@
 
   /* ---------- build track: heading panel + card panels ---------- */
   const headPanel=document.createElement("div"); headPanel.className="panel head";
-  headPanel.innerHTML=`<h2>Selected Works</h2><p class="lede">A living showcase of selected CYB3R projects across brand, web design and performance marketing.</p><div class="cta-row" id="viewAllHost"></div>`;
+  headPanel.innerHTML=`<h2>Selected Works</h2><p class="lede">A living showcase of selected CYB3R Media projects across brand, web design and performance marketing.</p><div class="cta-row" id="viewAllHost"></div>`;
   track.appendChild(headPanel);
-  headPanel.querySelector("#viewAllHost").appendChild(makeButton("View all work"));
+  headPanel.querySelector("#viewAllHost").appendChild(makeButton("View all work",{href:"/work"}));
 
   const cards=projects.map((p)=>{
     const el=document.createElement("div"); el.className="panel card";
@@ -94,7 +97,7 @@
     inner.innerHTML=`<div class="art"><div class="scene" style="background-image:url('${p.img}')"></div>${p.video?`<video class="scene-vid" muted loop playsinline preload="metadata" poster="${p.img}"><source src="${p.video}" type="video/mp4"></video>`:``}</div>
       <div class="info"><div class="cardline"></div><h3>${p.name}</h3><div class="cta-row"></div></div>`;
     el.appendChild(inner); track.appendChild(el);
-    inner.querySelector(".cta-row").appendChild(makeButton("Explore project"));
+    inner.querySelector(".cta-row").appendChild(makeButton("Explore project",{href:"/work?project="+encodeURIComponent(p.work), target:"_blank"}));
     return { el, inner, cardline:inner.querySelector(".cardline"), h3:inner.querySelector("h3"), p:inner.querySelector("p"), cta:inner.querySelector(".cta-row"), played:false, drew:false };
   });
 
