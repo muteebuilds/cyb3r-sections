@@ -36,6 +36,7 @@
   ];
   const N=projects.length;
   const track=document.getElementById("track");
+  if(!track) return;   // guard: section absent (e.g. a page with only .dm) -> don't crash the file
 
   /* ---------- exact button_wrapper ---------- */
   function makeButton(label){
@@ -222,6 +223,7 @@
 
   // ---- renderer / scene / camera ----
   const canvas=document.getElementById("gl");
+  if(!canvas || !T) return;   // guard: .dm absent, or three.js not loaded -> don't crash
   const renderer=new T.WebGLRenderer({canvas, alpha:true, antialias:true});
   renderer.setPixelRatio(Math.min(2, devicePixelRatio||1));
   renderer.setClearColor(0x040508, 0);
